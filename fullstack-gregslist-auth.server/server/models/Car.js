@@ -34,4 +34,21 @@ Car.virtual('creator', {
   justOne: true
 })
 
+// REVIEW[epic=Subdocs] Populating on a find
+Car.post('find', async function(docs) {
+  for (const doc of docs) {
+    await doc.populate('comments.creator', 'name picture').execPopulate()
+  }
+})
+
+// // inside Board.js
+// Board.post('findOneAndDelete', async function(doc) {
+//   await dbContext.Lists.deleteMany({ boardId: doc.id })
+// })
+
+// // inside List.js
+// Lists.post('deleteMany', async function(docs) {
+//   // itterate over docs and call delete many tasks
+// })
+
 export default Car

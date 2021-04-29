@@ -15,6 +15,7 @@ class CarsService {
   async find(query = {}) {
     const cars = await dbContext.Cars.find(query)
       .populate('creator', 'name picture')
+
     return cars
   }
 
@@ -42,7 +43,7 @@ class CarsService {
     if (!updated) {
       throw new BadRequest('invalid id')
     }
-    return updated
+    return await this.findById(carId)
   }
 
   async edit(body) {

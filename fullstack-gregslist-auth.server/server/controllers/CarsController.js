@@ -50,6 +50,7 @@ export class CarsController extends BaseController {
     try {
       req.body.creatorId = req.userInfo.id
       const car = await carsService.createComment(req.params.id, req.body)
+      socketService.messageRoom(car.id, 'NEW_COMMENT', { id: car.id, comments: car.comments, collection: 'cars' })
       return res.send(car)
     } catch (error) {
       next(error)
@@ -71,8 +72,9 @@ export class CarsController extends BaseController {
   async bid(req, res, next) {
     try {
       const data = await carsService.bid({ id: req.params.id, price: req.body.price })
-      // REVIEW
+      // REVIEW[epic=Sockets:Server] OUTGOING Messages to clients
       socketService.messageRoom(data.id, 'BID', { id: data.id, price: data.price, collection: 'cars' })
+      socketService.messageUser(data.creatorId, 'NOTIFICATION', { id: data.id, message: 'You have a new bid on one of your listings!', collection: 'cars' })
       return res.send(data)
     } catch (error) {
       next(error)

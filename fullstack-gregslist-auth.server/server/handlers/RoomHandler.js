@@ -1,6 +1,7 @@
 import { SocketHandler } from '../utils/SocketHandler'
 
-export class TestHandler extends SocketHandler {
+// REVIEW[epic=Sockets:Server]
+export class RoomHandler extends SocketHandler {
   /**
    * @param {import("socket.io").Server} io
    * @param {import("socket.io").Socket} socket
@@ -14,7 +15,6 @@ export class TestHandler extends SocketHandler {
       .on('LEAVE_ROOM', this.leave)
   }
 
-  // REVIEW
   async join(payload) {
     this.socket.join(payload.roomId)
     this.socket.emit('JOINED', {
@@ -24,9 +24,8 @@ export class TestHandler extends SocketHandler {
     })
   }
 
-  // REVIEW
   async leave(payload) {
     this.socket.leave(payload.roomId)
-    this.socket.emit('LEFT_ROOM', { room: payload.roomId })
+    this.socket.emit('LEFT', { roomId: payload.roomId })
   }
 }

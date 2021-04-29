@@ -23,7 +23,7 @@ AuthService.on(AuthService.AUTH_EVENTS.AUTHENTICATED, async function() {
   setBearer(AuthService.bearer)
   AppState.user = AuthService.user
   await accountService.getAccount()
-  // REVIEW Authenticates and informs the socket of our bearer token for any requests that will be sent throught the socket
-  socketService.emit('authenticate', AuthService.bearer)
+  // REVIEW[epic=Sockets:Client] Authenticates and informs the socket of our bearer token for any requests that will be sent throught the socket
+  socketService.authenticate(AuthService.bearer)
   // NOTE if there is something you want to do once the user is authenticated, place that here
 })

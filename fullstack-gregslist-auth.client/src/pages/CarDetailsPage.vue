@@ -62,11 +62,12 @@
 </template>
 
 <script>
-import { useRoute, useRouter } from 'vue-router'
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import { AppState } from '../AppState'
 import { reactive, computed, onMounted } from 'vue'
 import { carsService } from '../services/CarsService'
 import Notification from '../utils/Notification'
+import { socketService } from '../services/SocketService'
 export default {
   setup() {
     const route = useRoute()
@@ -79,6 +80,11 @@ export default {
     })
     onMounted(() => {
       carsService.getCarById(route.params.id)
+      socketService.emit('JOIN_ROOM', { roomId: route.params.id })
+    })
+    onBeforeRouteLeave((to, from, next) => {
+      socketService.emit('LEAVE_ROOM', { roomId: route.params.id })
+      next()
     })
     return {
       state,
